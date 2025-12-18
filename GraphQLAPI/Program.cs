@@ -28,6 +28,17 @@ namespace GraphQLAPI
                 .AddFiltering()
                 .AddSorting();
 
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowVue",
+                    policy => policy
+                        .WithOrigins("http://localhost:50327")
+                        .AllowAnyHeader()
+                        .AllowAnyMethod()
+                        .AllowCredentials()
+                );
+            });
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -42,6 +53,8 @@ namespace GraphQLAPI
             app.UseAuthorization();
 
             app.MapControllers();
+
+            app.UseCors("AllowVue");
 
             app.MapGraphQL();
 
